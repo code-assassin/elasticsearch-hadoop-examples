@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.hadoop;
+package org.elasticsearch.hadoop.examples;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;

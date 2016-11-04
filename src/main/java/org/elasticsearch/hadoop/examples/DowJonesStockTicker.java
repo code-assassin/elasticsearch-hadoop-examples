@@ -14,16 +14,27 @@
 package org.elasticsearch.hadoop.examples;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
+
+import org.elasticsearch.hadoop.mr.EsOutputFormat;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,12 +47,43 @@ import java.util.regex.Pattern;
  * date     time open    high    low     close   volume splits earnings dividends
  * 20031103	930	 25.6338 25.6479 25.5488 25.6196 305780	1	   0	    0
  */
-public class DowJonesStockTicker
+public class DowJonesStockTicker extends Configured implements Tool
 {
     private static final String ES_NODES = "127.0.0.1:9200";
     private static final String ES_INDEX = "djia/ticker";
 
-    private static class StockTickerMapper extends Mapper<Object, Text, Text, Text>
+    public static void main(String[] args) throws Exception
+    {
+        int res = ToolRunner.run(new Configuration(), new DowJonesStockTicker(), args);
+        System.exit(res);
+    }
+
+    @Override
+    public int run(String[] args) throws Exception
+    {
+        Configuration conf = this.getConf();
+
+        conf.setBoolean("mapred.map.tasks.speculative.execution", false);
+        conf.setBoolean("mapred.reduce.tasks.speculative.execution", false);
+        conf.set("es.nodes", ES_NODES);
+        conf.set("es.resource", ES_INDEX);
+
+        Job job = Job.getInstance(conf, "stock ticker");
+
+        job.setJarByClass(DowJonesStockTicker.class);
+        job.setMapperClass(StockTickerMapper.class);
+        job.setOutputFormatClass(EsOutputFormat.class);
+        job.setMapOutputKeyClass(NullWritable.class);
+        job.setMapOutputValueClass(MapWritable.class);
+
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        job.waitForCompletion(true);
+        return 0;
+    }
+
+    private static class StockTickerMapper extends Mapper<Object, Text, NullWritable, MapWritable>
     {
         private static final Pattern pattern = Pattern.compile("table_([a-zA-Z]+)\\.csv");
 
@@ -57,27 +99,30 @@ public class DowJonesStockTicker
 
             String symbol = matcher.group(1);
             String[] values = value.toString().split("\\s");
+            if (values.length != 10) {
+                return; // Malformed document
+            }
 
-            context.write(new Text(symbol), new Text(Arrays.toString(values)));
+            LocalDate date = LocalDate.parse(values[0], DateTimeFormatter.BASIC_ISO_DATE);
+            LocalTime time = LocalTime.parse(values[1], DateTimeFormatter.ofPattern("kmm"));
+            ZonedDateTime zoned = ZonedDateTime.of(date, time, ZoneId.of("America/New_York"));
+
+            MapWritable doc = new MapWritable();
+
+            doc.put(new Text("symbol"), new Text(symbol));
+            doc.put(new Text("timestamp"), new Text(zoned.toString()));
+            doc.put(new Text("open"), new Text(values[2]));
+            doc.put(new Text("high"), new Text(values[3]));
+            doc.put(new Text("low"), new Text(values[4]));
+            doc.put(new Text("close"), new Text(values[5]));
+            doc.put(new Text("volume"), new Text(values[6]));
+            doc.put(new Text("splits"), new Text(values[7]));
+            doc.put(new Text("earnings"), new Text(values[8]));
+            doc.put(new Text("dividends"), new Text(values[9]));
+
+            System.out.println(zoned.toString());
+
+            context.write(NullWritable.get(), doc);
         }
-    }
-
-    public static void main(String[] args) throws Exception
-    {
-        Configuration conf = new Configuration();
-        conf.setBoolean("mapred.map.tasks.speculative.execution", false);
-        conf.setBoolean("mapred.reduce.tasks.speculative.execution", false);
-        conf.set("es.nodes", ES_NODES);
-        conf.set("es.resource", ES_INDEX);
-
-        Job job = Job.getInstance(conf, "stock ticker");
-        job.setJarByClass(DowJonesStockTicker.class);
-        job.setMapperClass(StockTickerMapper.class);
-        job.setOutputKeyClass(Text.class);
-
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }

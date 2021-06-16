@@ -9,16 +9,18 @@
     <version>1.0-SNAPSHOT</version>
     <repositories>
         <repository>
-            <id>thingml-thirdparty</id>
-            <name>thingml-thirdparty</name>
-            <url>http://maven.thingml.org/thirdparty/</url>
+            <id>bestsolution</id>
+            <name>bestsolution</name>
+            <url>http://maven.bestsolution.at/efxclipse-releases/</url>
         </repository>
+
         <repository>
             <id>Default</id>
             <name>All apart from Aspose</name>
             <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
     </repositories>
+
     <properties>
         <elasticsearch.version>7.8.1</elasticsearch.version>
         <hadoop.version>3.3.0</hadoop.version>
@@ -27,10 +29,11 @@
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.eclipse.maven/org.apache.commons.httpclient -->
         <dependency>
-            <groupId>org.eclipse.maven</groupId>
+            <groupId>at.bestsolution.efxclipse.eclipse</groupId>
             <artifactId>org.apache.commons.httpclient</artifactId>
-            <version>3.8.0</version>
+            <version>3.1.0</version>
         </dependency>
+
 
 
 

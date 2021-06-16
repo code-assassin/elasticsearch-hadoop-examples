@@ -115,7 +115,7 @@ public class DowJonesStockTicker extends Configured implements Tool
             doc.put(new Text("high"), new Text(values[2]));
             doc.put(new Text("low"), new Text(values[3]));
             doc.put(new Text("close"), new Text(values[4]));
-            doc.put(new Text("volume"), new Text(values[5]));
+//            doc.put(new Text("volume"), new Text(values[5]));
 //            doc.put(new Text("splits"), new Text(values[6]));
 //            doc.put(new Text("earnings"), new Text(values[8]));
 //            doc.put(new Text("dividends"), new Text(values[9]));

@@ -85,20 +85,20 @@ public class DowJonesStockTicker extends Configured implements Tool
 
     private static class StockTickerMapper extends Mapper<Object, Text, NullWritable, MapWritable>
     {
-        private static final Pattern pattern = Pattern.compile("table_([a-zA-Z]+)\\.csv");
+//        private static final Pattern pattern = Pattern.compile("table_([a-zA-Z]+)\\.csv");
 
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException
         {
-            FileSplit split = (FileSplit) context.getInputSplit();
-            String name = split.getPath().getName();
+//            FileSplit split = (FileSplit) context.getInputSplit();
+//            String name = split.getPath().getName();
 
-            Matcher matcher = pattern.matcher(name);
+//            Matcher matcher = pattern.matcher(name);
 //            if (!matcher.matches()) {
 //                return;
 //            }
 
-            String symbol = matcher.group(1);
-            String[] values = value.toString().split("\\s");
+//            String symbol = matcher.group(1);
+            String[] values = value.toString().split(",");
 //            if (values.length != 10) {
 //                return; // Malformed document
 //            }

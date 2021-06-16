@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  */
 public class DowJonesStockTicker extends Configured implements Tool
 {
-    private static final String ES_NODES = "127.0.0.1:9200";
+    private static final String ES_NODES = "192.168.1.48:9200";
     private static final String ES_INDEX = "djia/ticker";
 
     public static void main(String[] args) throws Exception
@@ -103,24 +103,24 @@ public class DowJonesStockTicker extends Configured implements Tool
                 return; // Malformed document
             }
 
-            LocalDate date = LocalDate.parse(values[0], DateTimeFormatter.BASIC_ISO_DATE);
-            LocalTime time = LocalTime.parse(values[1], DateTimeFormatter.ofPattern("kmm"));
-            ZonedDateTime zoned = ZonedDateTime.of(date, time, ZoneId.of("America/New_York"));
+//            LocalDate date = LocalDate.parse(values[0], DateTimeFormatter.BASIC_ISO_DATE);
+//            LocalTime time = LocalTime.parse(values[1], DateTimeFormatter.ofPattern("kmm"));
+//            ZonedDateTime zoned = ZonedDateTime.of(date, time, ZoneId.of("America/New_York"));
 
             MapWritable doc = new MapWritable();
 
-            doc.put(new Text("symbol"), new Text(symbol));
-            doc.put(new Text("timestamp"), new Text(zoned.toString()));
-            doc.put(new Text("open"), new Text(values[2]));
-            doc.put(new Text("high"), new Text(values[3]));
-            doc.put(new Text("low"), new Text(values[4]));
-            doc.put(new Text("close"), new Text(values[5]));
-            doc.put(new Text("volume"), new Text(values[6]));
-            doc.put(new Text("splits"), new Text(values[7]));
-            doc.put(new Text("earnings"), new Text(values[8]));
-            doc.put(new Text("dividends"), new Text(values[9]));
+//            doc.put(new Text("symbol"), new Text(symbol));
+            doc.put(new Text("timestamp"), new Text(values[0]));
+            doc.put(new Text("open"), new Text(values[1]));
+            doc.put(new Text("high"), new Text(values[2]));
+            doc.put(new Text("low"), new Text(values[3]));
+            doc.put(new Text("close"), new Text(values[4]));
+            doc.put(new Text("volume"), new Text(values[5]));
+//            doc.put(new Text("splits"), new Text(values[6]));
+//            doc.put(new Text("earnings"), new Text(values[8]));
+//            doc.put(new Text("dividends"), new Text(values[9]));
 
-            System.out.println(zoned.toString());
+            System.out.println(values[0]);
 
             context.write(NullWritable.get(), doc);
         }

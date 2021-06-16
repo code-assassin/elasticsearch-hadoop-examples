@@ -93,15 +93,15 @@ public class DowJonesStockTicker extends Configured implements Tool
             String name = split.getPath().getName();
 
             Matcher matcher = pattern.matcher(name);
-            if (!matcher.matches()) {
-                return;
-            }
+//            if (!matcher.matches()) {
+//                return;
+//            }
 
             String symbol = matcher.group(1);
             String[] values = value.toString().split("\\s");
-            if (values.length != 10) {
-                return; // Malformed document
-            }
+//            if (values.length != 10) {
+//                return; // Malformed document
+//            }
 
 //            LocalDate date = LocalDate.parse(values[0], DateTimeFormatter.BASIC_ISO_DATE);
 //            LocalTime time = LocalTime.parse(values[1], DateTimeFormatter.ofPattern("kmm"));

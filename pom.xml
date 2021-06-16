@@ -28,7 +28,7 @@
 <!--        </dependency>-->
         <dependency>
             <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch-hadoop</artifactId>
+            <artifactId>elasticsearch-hadoop-mr</artifactId>
             <version>${elasticsearch.version}</version>
         </dependency>
 

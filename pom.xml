@@ -9,21 +9,34 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <elasticsearch.version>5.0.0</elasticsearch.version>
-        <hadoop.version>2.7.3</hadoop.version>
+        <elasticsearch.version>7.8.1</elasticsearch.version>
+        <hadoop.version>3.3.0</hadoop.version>
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-client -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
-            <version>2.7.3</version>
+            <version>${hadoop.version}</version>
         </dependency>
+
+        <!--        <dependency>-->
+<!--            <groupId>org.apache.hadoop</groupId>-->
+<!--            <artifactId>hadoop-client</artifactId>-->
+<!--            <version>${hadoop.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch-hadoop-mr</artifactId>
+            <artifactId>elasticsearch-hadoop</artifactId>
             <version>${elasticsearch.version}</version>
         </dependency>
+
+        <!--        <dependency>-->
+<!--            <groupId>org.elasticsearch</groupId>-->
+<!--            <artifactId>elasticsearch-hadoop-mr</artifactId>-->
+<!--            <version>${elasticsearch.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

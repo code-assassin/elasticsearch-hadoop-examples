@@ -67,6 +67,8 @@ public class DowJonesStockTicker extends Configured implements Tool
         conf.setBoolean("mapred.reduce.tasks.speculative.execution", false);
         conf.set("es.nodes", ES_NODES);
         conf.set("es.resource", ES_INDEX);
+        conf.set("es.net.http.auth.user","elastic");
+        conf.set("es.net.http.auth.pass","redhat123");
 
         Job job = Job.getInstance(conf, "stock ticker");
 

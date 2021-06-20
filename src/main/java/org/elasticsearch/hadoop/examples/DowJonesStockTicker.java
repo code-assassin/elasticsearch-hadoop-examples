@@ -67,8 +67,8 @@ public class DowJonesStockTicker extends Configured implements Tool
 
         conf.setBoolean("mapred.map.tasks.speculative.execution", false);
         conf.setBoolean("mapred.reduce.tasks.speculative.execution", false);
-//        conf.set("es.nodes", ES_NODES);
-//        conf.set("es.resource", ES_INDEX);
+        conf.get("es.nodes");
+        conf.get("es.resource");
         conf.set("es.net.http.auth.user","elastic");
         conf.set("es.net.http.auth.pass","redhat123");
 

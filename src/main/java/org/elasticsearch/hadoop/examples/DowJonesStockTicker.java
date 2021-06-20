@@ -49,8 +49,8 @@ import java.util.regex.Pattern;
  */
 public class DowJonesStockTicker extends Configured implements Tool
 {
-    private static final String ES_NODES = "192.168.1.48:9200";
-    private static final String ES_INDEX = "djia/ticker";
+//    private static final String ES_NODES = "192.168.1.48:9200";
+//    private static final String ES_INDEX = "djia/ticker";
 
     public static void main(String[] args) throws Exception
     {
@@ -62,11 +62,13 @@ public class DowJonesStockTicker extends Configured implements Tool
     public int run(String[] args) throws Exception
     {
         Configuration conf = this.getConf();
+//        Configuration conf = context.getConfiguration();
+//        String ES_NODES = conf.get("test");
 
         conf.setBoolean("mapred.map.tasks.speculative.execution", false);
         conf.setBoolean("mapred.reduce.tasks.speculative.execution", false);
-        conf.set("es.nodes", ES_NODES);
-        conf.set("es.resource", ES_INDEX);
+//        conf.set("es.nodes", ES_NODES);
+//        conf.set("es.resource", ES_INDEX);
         conf.set("es.net.http.auth.user","elastic");
         conf.set("es.net.http.auth.pass","redhat123");
 
